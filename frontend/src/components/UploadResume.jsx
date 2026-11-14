@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Upload, X } from 'lucide-react';
+import API from '../services/api';
 
 const UploadResume = ({ onUpload, onClose }) => {
   const fileInputRef = useRef(null);
@@ -31,15 +32,8 @@ const UploadResume = ({ onUpload, onClose }) => {
       const formData = new FormData();
       formData.append('file', file);
       
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        onUpload?.(data);
-      }
+      const response = await API.post('/upload-resume', formData);
+      onUpload?.(response.data);
     } catch (error) {
       console.error('Upload failed:', error);
     } finally {
@@ -70,11 +64,11 @@ const UploadResume = ({ onUpload, onClose }) => {
             <Upload className="mx-auto mb-4 text-gray-400" size={48} />
             <p className="text-lg font-medium text-gray-900">Drop your resume here</p>
             <p className="text-sm text-gray-600 mt-2">or click to browse</p>
-            <p className="text-xs text-gray-500 mt-4">PDF, DOC, or DOCX (max 5MB)</p>
+            <p className="text-xs text-gray-500 mt-4">PDF only</p>
             <input
               ref={fileInputRef}
               type="file"
-              accept=".pdf,.doc,.docx"
+              accept=".pdf"
               onChange={(e) => handleFileUpload(e.target.files?.[0])}
               className="hidden"
             />

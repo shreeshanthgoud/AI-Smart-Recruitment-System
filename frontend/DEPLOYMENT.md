@@ -24,11 +24,28 @@
 
 ### Option 1: Vercel (Recommended)
 
-1. Push code to GitHub
-2. Connect repository to Vercel
-3. Set environment variables:
-   - `VITE_API_URL` - Your backend API URL
-4. Deploy (automatic on push)
+The frontend is deployed on Vercel; the FastAPI backend must be hosted separately
+(for example, as a Render Web Service).
+
+1. Deploy the backend using the instructions below and copy its public URL.
+2. In Vercel, import the GitHub repository and set **Root Directory** to `frontend`.
+3. Use the Vite defaults: build command `npm run build`, output directory `dist`.
+4. Add the environment variable `VITE_API_URL` with the backend URL (no trailing slash).
+5. Deploy. Add the resulting Vercel URL to the backend's `CORS_ORIGINS`.
+
+#### Deploy the backend on Render
+
+1. Create a **Web Service** from the same GitHub repository.
+2. Set **Root Directory** to `backend`.
+3. Set the build command to `pip install -r requirements.txt`.
+4. Set the start command to `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+5. Add `OPENROUTER_API_KEY`, `MONGODB_URI`, and `CORS_ORIGINS` as Render environment
+   variables. `CORS_ORIGINS` should contain your Vercel site URL.
+6. Set Vercel's `VITE_API_URL` to the Render service URL and redeploy the frontend.
+
+Use fresh credentials for production. The API key and database connection string
+previously embedded in backend source must be rotated; removing them from the current
+files does not remove copies from Git history.
 
 ### Option 2: Netlify
 

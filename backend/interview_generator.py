@@ -1,8 +1,12 @@
 import os
 from openai import OpenAI
 
-# Load OpenRouter API key from environment variable
 API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+if not API_KEY:
+    raise ValueError(
+        "Missing OPENROUTER_API_KEY environment variable"
+    )
 
 client = OpenAI(
     api_key=API_KEY,

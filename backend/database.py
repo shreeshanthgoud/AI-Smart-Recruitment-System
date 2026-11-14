@@ -1,6 +1,10 @@
+import os
+
 from pymongo import MongoClient
 
-MONGO_URI = "mongodb+srv://shreeshanth:Kssg%40123@cluster0.yu7ac7x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URI = os.getenv("MONGODB_URI")
+if not MONGO_URI:
+    raise ValueError("Missing MONGODB_URI environment variable")
 
 client = MongoClient(MONGO_URI)
 
